@@ -1,0 +1,662 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Finaliser ma commande — KEMO MARKET</title>
+  <meta name="description" content="Finalisez votre commande en toute sécurité. Paiement protégé jusqu'à livraison.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="stylesheet" href="css/style.css">
+  <style>
+    .checkout-page { padding: 2.5rem 0 5rem; min-height: 100vh; }
+
+    .checkout-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 2.5rem;
+      padding-bottom: 1.5rem;
+      border-bottom: 1px solid var(--gold-border);
+    }
+
+    .checkout-title { font-size: 1.8rem; font-weight: 700; color: var(--text-primary); }
+
+    .checkout-trust {
+      display: flex;
+      gap: 1.5rem;
+      font-size: 0.78rem;
+      color: var(--text-muted);
+    }
+    .checkout-trust-item { display: flex; align-items: center; gap: 0.4rem; }
+    .checkout-trust-item svg { color: var(--gold); }
+
+    .checkout-layout {
+      display: grid;
+      grid-template-columns: 1fr 380px;
+      gap: 2rem;
+      align-items: start;
+    }
+
+    /* Steps */
+    .checkout-steps {
+      display: flex;
+      gap: 0;
+      margin-bottom: 2rem;
+      position: relative;
+    }
+
+    .checkout-steps::before {
+      content: '';
+      position: absolute;
+      top: 20px;
+      left: 20px;
+      right: 20px;
+      height: 2px;
+      background: var(--gold-border);
+      z-index: 0;
+    }
+
+    .checkout-step {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.4rem;
+      flex: 1;
+      position: relative;
+      z-index: 1;
+    }
+
+    .step-circle {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      border: 2px solid var(--gold-border);
+      background: var(--bg-card);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: var(--text-muted);
+      transition: var(--transition);
+    }
+
+    .checkout-step.active .step-circle {
+      border-color: var(--gold);
+      background: linear-gradient(135deg, var(--gold), var(--gold-dark));
+      color: #07070a;
+    }
+
+    .checkout-step.done .step-circle {
+      border-color: var(--success);
+      background: var(--success);
+      color: white;
+    }
+
+    .step-label { font-size: 0.72rem; color: var(--text-muted); text-align: center; font-weight: 500; }
+    .checkout-step.active .step-label { color: var(--gold); font-weight: 600; }
+
+    /* Sections */
+    .checkout-section {
+      background: var(--bg-card);
+      border: 1px solid var(--gold-border);
+      border-radius: var(--radius-lg);
+      padding: 1.75rem;
+      margin-bottom: 1.25rem;
+      transition: var(--transition);
+    }
+
+    .checkout-section:focus-within { border-color: var(--gold-border-active); }
+
+    .checkout-section-header {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .section-number {
+      width: 32px;
+      height: 32px;
+      background: linear-gradient(135deg, var(--gold), var(--gold-dark));
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: #07070a;
+      flex-shrink: 0;
+    }
+
+    .section-title-h2 {
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: var(--text-primary);
+    }
+
+    /* Payment Options */
+    .payment-options { display: flex; flex-direction: column; gap: 0.75rem; }
+
+    .payment-option {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.75rem;
+      background: var(--bg-surface);
+      border: 2px solid var(--gold-border);
+      border-radius: var(--radius-md);
+      padding: 1rem 1.25rem;
+      cursor: pointer;
+      transition: var(--transition);
+    }
+
+    .payment-option:hover { border-color: var(--gold-border-active); }
+    .payment-option.selected { border-color: var(--gold); background: var(--gold-glow); }
+
+    .payment-option input[type="radio"] {
+      accent-color: var(--gold);
+      width: 18px;
+      height: 18px;
+      margin-top: 2px;
+      flex-shrink: 0;
+    }
+
+    .payment-option-label { font-weight: 600; font-size: 0.9rem; margin-bottom: 0.2rem; }
+    .payment-option-desc { font-size: 0.78rem; color: var(--text-muted); }
+    .payment-option-price { font-size: 0.85rem; font-weight: 700; color: var(--gold); margin-top: 0.25rem; }
+
+    /* Form fields */
+    .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+    .form-field { display: flex; flex-direction: column; gap: 0.35rem; }
+    .form-field.full { grid-column: 1/-1; }
+
+    .form-label {
+      font-size: 0.78rem;
+      font-weight: 600;
+      color: var(--text-secondary);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+
+    .form-input, .form-select, .form-textarea {
+      background: var(--bg-surface);
+      border: 1.5px solid var(--gold-border);
+      border-radius: var(--radius-md);
+      padding: 0.75rem 1rem;
+      color: var(--text-primary);
+      font-family: var(--font-body);
+      font-size: 0.9rem;
+      outline: none;
+      transition: var(--transition);
+      width: 100%;
+    }
+
+    .form-input:focus, .form-select:focus, .form-textarea:focus {
+      border-color: var(--gold-border-active);
+      box-shadow: 0 0 0 3px var(--gold-glow);
+    }
+
+    .form-input::placeholder { color: var(--text-muted); }
+    .form-select { cursor: pointer; }
+    .form-textarea { resize: vertical; min-height: 80px; }
+
+    /* Order Summary */
+    .order-summary {
+      background: var(--bg-card);
+      border: 1px solid var(--gold-border);
+      border-radius: var(--radius-lg);
+      padding: 1.5rem;
+      position: sticky;
+      top: calc(var(--nav-height) + 1rem);
+    }
+
+    .summary-title {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin-bottom: 1.25rem;
+      padding-bottom: 1rem;
+      border-bottom: 1px solid var(--gold-border);
+    }
+
+    .summary-items { display: flex; flex-direction: column; gap: 0.75rem; margin-bottom: 1.25rem; }
+
+    .summary-item {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .summary-item-emoji { font-size: 1.8rem; flex-shrink: 0; }
+    .summary-item-name { font-size: 0.82rem; font-weight: 500; flex: 1; line-height: 1.35; }
+    .summary-item-price { font-size: 0.85rem; font-weight: 700; color: var(--gold); }
+
+    .summary-divider { border: none; border-top: 1px solid var(--gold-border); margin: 1rem 0; }
+
+    .summary-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.85rem;
+      margin-bottom: 0.6rem;
+    }
+
+    .summary-row-label { color: var(--text-secondary); }
+    .summary-row-value { font-weight: 600; color: var(--text-primary); }
+
+    .summary-total-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-top: 1rem;
+      border-top: 1px solid var(--gold-border);
+      margin-bottom: 1.25rem;
+    }
+
+    .summary-total-label { font-weight: 700; font-size: 1rem; }
+    .summary-total-value { font-size: 1.4rem; font-weight: 900; color: var(--gold); font-family: var(--font-display); }
+
+    /* Promo Code */
+    .promo-form { display: flex; gap: 0.5rem; margin-bottom: 1.25rem; }
+    .promo-input {
+      flex: 1;
+      height: 42px;
+      background: var(--bg-surface);
+      border: 1.5px solid var(--gold-border);
+      border-radius: var(--radius-full);
+      padding: 0 1rem;
+      color: var(--text-primary);
+      font-size: 0.85rem;
+      outline: none;
+    }
+
+    /* How it works */
+    .how-it-works {
+      margin-top: 1.25rem;
+      padding: 1rem;
+      background: var(--bg-surface);
+      border-radius: var(--radius-md);
+      border: 1px solid var(--gold-border);
+    }
+
+    .how-it-title { font-size: 0.75rem; font-weight: 700; color: var(--gold); margin-bottom: 0.75rem; }
+    .how-step { display: flex; gap: 0.6rem; margin-bottom: 0.5rem; font-size: 0.75rem; color: var(--text-muted); line-height: 1.5; }
+    .how-step-num { width: 18px; height: 18px; background: var(--gold); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.65rem; font-weight: 700; color: #07070a; flex-shrink: 0; }
+
+    /* Mobile */
+    @media (max-width: 900px) {
+      .checkout-layout { grid-template-columns: 1fr; }
+      .order-summary { position: static; }
+      .form-grid { grid-template-columns: 1fr; }
+      .checkout-trust { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- TOP TRUST BAR (minimal) -->
+<div style="background:var(--bg-card);border-bottom:1px solid var(--gold-border);padding:0.6rem 0;text-align:center">
+  <div class="container">
+    <div class="checkout-trust" style="justify-content:center">
+      <span class="checkout-trust-item">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        Paiement sécurisé
+      </span>
+      <span class="checkout-trust-item">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
+        Livraison suivie
+      </span>
+      <span class="checkout-trust-item">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 4v6h6M23 20v-6h-6"/><path d="M20.49 9A9 9 0 0 0 5.64 5.64L1 10m22 4l-4.64 4.36A9 9 0 0 1 3.51 15"/></svg>
+        Satisfait ou remboursé
+      </span>
+    </div>
+  </div>
+</div>
+
+<!-- NAV minimal -->
+<header>
+  <nav style="display:flex;align-items:center;justify-content:space-between;padding:1rem 2rem;border-bottom:1px solid var(--gold-border)" aria-label="Navigation checkout">
+    <a href="index.html" class="nav-logo">
+      <div class="nav-logo-icon" aria-hidden="true">🏺</div>
+      <div class="nav-logo-text">
+        <span class="nav-logo-name">KEMO</span>
+        <span class="nav-logo-sub">Market · Lomé</span>
+      </div>
+    </a>
+    <a href="catalogue.html" style="color:var(--text-muted);font-size:0.85rem;text-decoration:none;display:flex;align-items:center;gap:0.4rem">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg>
+      Continuer mes achats
+    </a>
+  </nav>
+</header>
+
+<main id="main-content" class="checkout-page">
+  <div class="container">
+
+    <!-- CHECKOUT STEPS -->
+    <nav class="checkout-steps" aria-label="Étapes de commande">
+      <div class="checkout-step done" aria-current="false">
+        <div class="step-circle">✓</div>
+        <span class="step-label">Panier</span>
+      </div>
+      <div class="checkout-step active" aria-current="step">
+        <div class="step-circle">2</div>
+        <span class="step-label">Informations</span>
+      </div>
+      <div class="checkout-step" aria-current="false">
+        <div class="step-circle">3</div>
+        <span class="step-label">Paiement</span>
+      </div>
+      <div class="checkout-step" aria-current="false">
+        <div class="step-circle">4</div>
+        <span class="step-label">Confirmation</span>
+      </div>
+    </nav>
+
+    <div class="checkout-header">
+      <h1 class="checkout-title">Finaliser ma commande</h1>
+      <div class="checkout-trust">
+        <span class="checkout-trust-item">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+          Paiement 100% sécurisé
+        </span>
+        <span class="checkout-trust-item">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
+          Argent protégé jusqu'à livraison
+        </span>
+      </div>
+    </div>
+
+    <div class="checkout-layout">
+      <!-- LEFT: FORM -->
+      <form id="checkout-form" novalidate>
+
+        <!-- 1. MODE DE PAIEMENT -->
+        <section class="checkout-section" aria-labelledby="payment-heading">
+          <div class="checkout-section-header">
+            <div class="section-number" aria-hidden="true">1</div>
+            <h2 class="section-title-h2" id="payment-heading">Mode de paiement</h2>
+          </div>
+          <div class="payment-options" role="radiogroup" aria-label="Choisir le mode de paiement">
+            <label class="payment-option selected" for="pay-secure" onclick="selectPayment(this)">
+              <input type="radio" name="payment" id="pay-secure" value="secure" checked>
+              <div>
+                <p class="payment-option-label">🛡️ Paiement sécurisé (Recommandé)</p>
+                <p class="payment-option-desc">Payez maintenant. Votre argent est bloqué et libéré uniquement quand vous confirmez la réception.</p>
+                <p class="payment-option-price">Payer la totalité maintenant</p>
+              </div>
+            </label>
+
+            <label class="payment-option" for="pay-reception" onclick="selectPayment(this)">
+              <input type="radio" name="payment" id="pay-reception" value="reception">
+              <div>
+                <p class="payment-option-label">💵 Payer à la réception (acompte requis)</p>
+                <p class="payment-option-desc">Payez 10% maintenant pour réserver votre commande. Le reste à la livraison.</p>
+                <div id="acompte-info" style="display:none;margin-top:0.5rem;padding:0.75rem;background:var(--bg-card);border-radius:var(--radius-sm);font-size:0.78rem;color:var(--text-secondary)">
+                  <span style="color:var(--gold);font-weight:700">Acompte : </span><span id="acompte-amount">—</span> · <span style="color:var(--text-muted)">Reste à la livraison : </span><span id="reste-amount">—</span>
+                </div>
+              </div>
+            </label>
+          </div>
+        </section>
+
+        <!-- 2. CONTACT -->
+        <section class="checkout-section" aria-labelledby="contact-heading">
+          <div class="checkout-section-header">
+            <div class="section-number" aria-hidden="true">2</div>
+            <h2 class="section-title-h2" id="contact-heading">Coordonnées</h2>
+          </div>
+          <div class="form-grid">
+            <div class="form-field">
+              <label class="form-label" for="first-name">Prénom *</label>
+              <input type="text" id="first-name" class="form-input" placeholder="Kofi" required autocomplete="given-name">
+            </div>
+            <div class="form-field">
+              <label class="form-label" for="last-name">Nom *</label>
+              <input type="text" id="last-name" class="form-input" placeholder="Agbénou" required autocomplete="family-name">
+            </div>
+            <div class="form-field">
+              <label class="form-label" for="phone">Téléphone WhatsApp *</label>
+              <input type="tel" id="phone" class="form-input" placeholder="+228 90 00 00 00" required autocomplete="tel">
+            </div>
+            <div class="form-field">
+              <label class="form-label" for="email">Email (optionnel)</label>
+              <input type="email" id="email" class="form-input" placeholder="kofi@example.com" autocomplete="email">
+            </div>
+          </div>
+        </section>
+
+        <!-- 3. LIVRAISON -->
+        <section class="checkout-section" aria-labelledby="delivery-heading">
+          <div class="checkout-section-header">
+            <div class="section-number" aria-hidden="true">3</div>
+            <h2 class="section-title-h2" id="delivery-heading">Adresse de livraison</h2>
+          </div>
+          <div class="form-grid">
+            <div class="form-field">
+              <label class="form-label" for="city">Ville *</label>
+              <select id="city" class="form-select" required aria-label="Sélectionner votre ville">
+                <option value="">Sélectionner votre ville...</option>
+                <option value="lome">Lomé</option>
+                <option value="kara">Kara</option>
+                <option value="sokode">Sokodé</option>
+                <option value="kpalime">Kpalimé</option>
+                <option value="atakpame">Atakpamé</option>
+                <option value="dapaong">Dapaong</option>
+                <option value="tsevie">Tsévié</option>
+                <option value="vogan">Vogan</option>
+                <option value="autre">Autre ville</option>
+              </select>
+            </div>
+            <div class="form-field">
+              <label class="form-label" for="quartier">Quartier / Zone</label>
+              <input type="text" id="quartier" class="form-input" placeholder="Tokoin, Adidogomé..." autocomplete="address-level3">
+            </div>
+            <div class="form-field full">
+              <label class="form-label" for="adresse">Adresse précise</label>
+              <input type="text" id="adresse" class="form-input" placeholder="N° rue, point de repère..." autocomplete="street-address">
+            </div>
+            <div class="form-field full">
+              <label class="form-label" for="notes">Notes pour le livreur (optionnel)</label>
+              <textarea id="notes" class="form-textarea" placeholder="Instructions spéciales, horaires de disponibilité..."></textarea>
+            </div>
+          </div>
+        </section>
+
+        <!-- 4. MOBILE MONEY -->
+        <section class="checkout-section" aria-labelledby="mobile-money-heading">
+          <div class="checkout-section-header">
+            <div class="section-number" aria-hidden="true">4</div>
+            <h2 class="section-title-h2" id="mobile-money-heading">Paiement Mobile Money</h2>
+          </div>
+          <div class="payment-options" role="radiogroup" aria-label="Choisir votre opérateur">
+            <label class="payment-option selected" for="mtn" onclick="selectPayment(this)">
+              <input type="radio" name="mobile-money" id="mtn" value="mtn" checked>
+              <div>
+                <p class="payment-option-label">📱 MTN Mobile Money</p>
+                <p class="payment-option-desc">Paiement via MTN MoMo. Transaction sécurisée et instantanée.</p>
+              </div>
+            </label>
+            <label class="payment-option" for="moov" onclick="selectPayment(this)">
+              <input type="radio" name="mobile-money" id="moov" value="moov">
+              <div>
+                <p class="payment-option-label">📱 Moov Money / Flooz</p>
+                <p class="payment-option-desc">Paiement via Moov Africa. Disponible partout au Togo.</p>
+              </div>
+            </label>
+            <label class="payment-option" for="wave" onclick="selectPayment(this)">
+              <input type="radio" name="mobile-money" id="wave" value="wave">
+              <div>
+                <p class="payment-option-label">🌊 Wave</p>
+                <p class="payment-option-desc">Paiement instantané via Wave. Frais de transaction réduits.</p>
+              </div>
+            </label>
+          </div>
+
+          <div style="margin-top:1rem">
+            <label class="form-label" for="momo-number">Numéro Mobile Money *</label>
+            <input type="tel" id="momo-number" class="form-input" placeholder="+228 90 00 00 00" style="margin-top:0.35rem" required autocomplete="tel">
+          </div>
+        </section>
+
+        <button type="submit" class="btn btn-gold btn-full btn-lg" style="margin-top:0.5rem;font-size:1.05rem">
+          ⚡ Confirmer et payer →
+        </button>
+        <p style="text-align:center;font-size:0.75rem;color:var(--text-muted);margin-top:0.75rem">
+          En confirmant, vous acceptez nos <a href="#" style="color:var(--gold)">Conditions d'utilisation</a>. Votre argent sera protégé jusqu'à confirmation de réception.
+        </p>
+      </form>
+
+      <!-- RIGHT: ORDER SUMMARY -->
+      <aside class="order-summary" aria-label="Résumé de commande">
+        <h2 class="summary-title">📋 Résumé de commande</h2>
+
+        <div class="summary-items" id="summary-items" aria-label="Articles commandés">
+          <p style="color:var(--text-muted);font-size:0.85rem;text-align:center">Chargement...</p>
+        </div>
+
+        <hr class="summary-divider">
+
+        <!-- Promo Code -->
+        <div class="promo-form">
+          <label for="promo-code" class="visually-hidden">Code promo</label>
+          <input type="text" id="promo-code" class="promo-input" placeholder="Code promo" aria-label="Entrer un code promo">
+          <button type="button" class="btn btn-outline btn-sm" onclick="applyPromo()">Appliquer</button>
+        </div>
+
+        <div class="summary-row"><span class="summary-row-label">Sous-total</span><span class="summary-row-value" id="subtotal-display">—</span></div>
+        <div class="summary-row"><span class="summary-row-label">Livraison</span><span class="summary-row-value" id="delivery-display" style="color:var(--success)">Calculé à l'étape 3</span></div>
+        <div class="summary-row" id="discount-row" style="display:none"><span class="summary-row-label" style="color:var(--success)">Code promo</span><span class="summary-row-value" id="discount-display" style="color:var(--success)">—</span></div>
+
+        <div class="summary-total-row">
+          <span class="summary-total-label">Total</span>
+          <span class="summary-total-value" id="total-display" aria-live="polite">—</span>
+        </div>
+
+        <div class="how-it-works">
+          <p class="how-it-title">🛡️ Comment ça se passe ?</p>
+          <div class="how-step"><div class="how-step-num">1</div><span>Votre commande est passée et votre argent est sécurisé par KEMO</span></div>
+          <div class="how-step"><div class="how-step-num">2</div><span>Le vendeur prépare et expédie votre colis</span></div>
+          <div class="how-step"><div class="how-step-num">3</div><span>Vous recevez et vérifiez votre commande</span></div>
+          <div class="how-step"><div class="how-step-num">4</div><span>Vous confirmez la réception → le vendeur reçoit son paiement</span></div>
+        </div>
+      </aside>
+    </div>
+  </div>
+</main>
+
+<style>.visually-hidden{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}</style>
+
+<script src="js/products-data.js"></script>
+<script src="js/cart.js"></script>
+<script>
+function selectPayment(label) {
+  document.querySelectorAll('.payment-option').forEach(l => l.classList.remove('selected'));
+  label.classList.add('selected');
+
+  // Show acompte info for "payer à la réception"
+  const radio = label.querySelector('input[type="radio"]');
+  if (radio && radio.value === 'reception') {
+    document.getElementById('acompte-info').style.display = 'block';
+    const total = KemoCart.getTotal();
+    document.getElementById('acompte-amount').textContent = formatPrice(Math.round(total * 0.1));
+    document.getElementById('reste-amount').textContent = formatPrice(Math.round(total * 0.9));
+  } else {
+    const acompteInfo = document.getElementById('acompte-info');
+    if (acompteInfo) acompteInfo.style.display = 'none';
+  }
+}
+
+function applyPromo() {
+  const code = document.getElementById('promo-code').value.trim().toUpperCase();
+  const promoRow = document.getElementById('discount-row');
+  const discountEl = document.getElementById('discount-display');
+
+  if (code === 'KEMO10') {
+    promoRow.style.display = 'flex';
+    const total = KemoCart.getTotal();
+    discountEl.textContent = '-' + formatPrice(Math.round(total * 0.10));
+    document.getElementById('total-display').textContent = formatPrice(Math.round(total * 0.90));
+    document.getElementById('promo-code').style.borderColor = 'var(--success)';
+  } else {
+    document.getElementById('promo-code').style.borderColor = 'var(--danger)';
+    setTimeout(() => document.getElementById('promo-code').style.borderColor = '', 2000);
+  }
+}
+
+// Populate order summary
+document.addEventListener('DOMContentLoaded', () => {
+  const items = KemoCart.getCartItems();
+  const summaryEl = document.getElementById('summary-items');
+  const subtotalEl = document.getElementById('subtotal-display');
+  const totalEl = document.getElementById('total-display');
+  const deliveryEl = document.getElementById('delivery-display');
+
+  const params = new URLSearchParams(window.location.search);
+  const directId = params.get('id');
+
+  let displayItems = items;
+
+  if (directId && items.length === 0) {
+    const p = getProductById(parseInt(directId));
+    if (p) displayItems = [{ product: p, qty: 1 }];
+  }
+
+  if (displayItems.length === 0) {
+    summaryEl.innerHTML = '<p style="color:var(--text-muted);font-size:0.85rem;text-align:center">Panier vide. <a href="catalogue.html" style="color:var(--gold)">Voir le catalogue</a></p>';
+    return;
+  }
+
+  summaryEl.innerHTML = displayItems.map(item => `
+    <div class="summary-item">
+      <span class="summary-item-emoji">${item.product.emoji}</span>
+      <span class="summary-item-name">${item.product.name} × ${item.qty}</span>
+      <span class="summary-item-price">${formatPrice(item.product.price * item.qty)}</span>
+    </div>
+  `).join('');
+
+  const subtotal = displayItems.reduce((s, i) => s + i.product.price * i.qty, 0);
+  subtotalEl.textContent = formatPrice(subtotal);
+  totalEl.textContent = formatPrice(subtotal);
+
+  // Update delivery on city change
+  document.getElementById('city')?.addEventListener('change', (e) => {
+    const deliveryFee = e.target.value === 'lome' ? 1500 : e.target.value ? 3000 : 0;
+    if (deliveryFee > 0) {
+      deliveryEl.textContent = formatPrice(deliveryFee);
+      deliveryEl.style.color = 'var(--text-primary)';
+      totalEl.textContent = formatPrice(subtotal + deliveryFee);
+    }
+  });
+});
+
+// Form submit
+document.getElementById('checkout-form').addEventListener('submit', (e) => {
+  e.preventDefault();
+  const btn = e.target.querySelector('button[type="submit"]');
+  btn.textContent = '⏳ Traitement en cours...';
+  btn.disabled = true;
+  btn.style.opacity = '0.7';
+
+  setTimeout(() => {
+    // Redirect to success page (simulate)
+    document.body.innerHTML = `
+      <div style="min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:2rem;background:var(--bg-primary)">
+        <div style="font-size:5rem;margin-bottom:1.5rem">🎉</div>
+        <h1 style="font-family:var(--font-display);font-size:2.5rem;color:var(--gold);margin-bottom:1rem">Commande confirmée !</h1>
+        <p style="color:var(--text-secondary);max-width:480px;line-height:1.7;margin-bottom:2rem">
+          Votre commande a bien été reçue. Vous allez recevoir un SMS de confirmation sur votre WhatsApp.
+          Votre argent est protégé jusqu'à la livraison. 🛡️
+        </p>
+        <p style="font-size:0.9rem;color:var(--text-muted);margin-bottom:2rem">
+          Numéro de commande : <strong style="color:var(--gold)">#KM-${Math.random().toString(36).substr(2,8).toUpperCase()}</strong>
+        </p>
+        <a href="index.html" class="btn btn-gold btn-lg">Retour à l'accueil</a>
+      </div>`;
+    KemoCart.clearCart();
+  }, 2000);
+});
+</script>
+</body>
+</html>

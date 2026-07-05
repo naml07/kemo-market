@@ -1,0 +1,662 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Catalogue — KEMO MARKET</title>
+  <meta name="description" content="Découvrez tous les produits disponibles sur KEMO MARKET. Mode, High-Tech, Beauté, Maison, Alimentation. Livraison à Lomé et partout au Togo.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="stylesheet" href="css/style.css">
+  <style>
+    /* ── PAGE CATALOGUE ───────────────────────────────────── */
+    .catalogue-layout {
+      display: grid;
+      grid-template-columns: var(--sidebar-width) 1fr;
+      gap: 2rem;
+      padding: 2rem 0 4rem;
+    }
+
+    /* Sidebar */
+    .sidebar {
+      position: sticky;
+      top: calc(var(--nav-height) + 1rem);
+      height: fit-content;
+      max-height: calc(100vh - var(--nav-height) - 2rem);
+      overflow-y: auto;
+    }
+
+    .sidebar-section {
+      background: var(--bg-card);
+      border: 1px solid var(--gold-border);
+      border-radius: var(--radius-lg);
+      padding: 1.25rem;
+      margin-bottom: 1rem;
+    }
+
+    .sidebar-title {
+      font-size: 0.78rem;
+      font-weight: 700;
+      color: var(--gold);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      margin-bottom: 1rem;
+    }
+
+    .filter-option {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      padding: 0.45rem 0;
+      cursor: pointer;
+      transition: var(--transition-fast);
+    }
+
+    .filter-option input[type="radio"],
+    .filter-option input[type="checkbox"] {
+      accent-color: var(--gold);
+      width: 16px;
+      height: 16px;
+      cursor: pointer;
+    }
+
+    .filter-option label {
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      width: 100%;
+    }
+
+    .filter-option:hover label { color: var(--text-primary); }
+    .filter-count {
+      font-size: 0.7rem;
+      color: var(--text-muted);
+      background: var(--bg-surface);
+      padding: 0.1rem 0.4rem;
+      border-radius: var(--radius-full);
+    }
+
+    /* Price Range */
+    .price-range-inputs {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.5rem;
+      margin-top: 0.75rem;
+    }
+
+    .price-input {
+      background: var(--bg-surface);
+      border: 1px solid var(--gold-border);
+      border-radius: var(--radius-sm);
+      padding: 0.5rem;
+      color: var(--text-primary);
+      font-size: 0.8rem;
+      width: 100%;
+      outline: none;
+    }
+    .price-input:focus { border-color: var(--gold-border-active); }
+
+    /* Catalogue Header */
+    .catalogue-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      padding: 1.5rem 0 1rem;
+      border-bottom: 1px solid var(--gold-border);
+      margin-bottom: 1.5rem;
+      flex-wrap: wrap;
+    }
+
+    .catalogue-breadcrumb {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      font-size: 0.8rem;
+      color: var(--text-muted);
+    }
+
+    .catalogue-breadcrumb a { color: var(--gold); text-decoration: none; }
+    .catalogue-breadcrumb a:hover { text-decoration: underline; }
+
+    .catalogue-count { font-weight: 600; color: var(--text-primary); }
+
+    .catalogue-controls { display: flex; gap: 0.75rem; align-items: center; }
+
+    .sort-select {
+      background: var(--bg-card);
+      border: 1px solid var(--gold-border);
+      border-radius: var(--radius-full);
+      padding: 0.5rem 1rem;
+      color: var(--text-primary);
+      font-size: 0.82rem;
+      outline: none;
+      cursor: pointer;
+    }
+
+    .view-toggle { display: flex; gap: 0.25rem; }
+    .view-btn {
+      width: 36px; height: 36px;
+      background: var(--bg-card);
+      border: 1px solid var(--gold-border);
+      border-radius: var(--radius-sm);
+      color: var(--text-muted);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: var(--transition-fast);
+    }
+    .view-btn.active, .view-btn:hover { border-color: var(--gold); color: var(--gold); }
+
+    /* Active Filters */
+    .active-filters {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+      margin-bottom: 1rem;
+    }
+
+    .filter-tag {
+      display: flex;
+      align-items: center;
+      gap: 0.35rem;
+      background: var(--gold-glow);
+      border: 1px solid var(--gold-border);
+      border-radius: var(--radius-full);
+      padding: 0.25rem 0.75rem;
+      font-size: 0.75rem;
+      color: var(--gold);
+      font-weight: 500;
+    }
+
+    .filter-tag-remove {
+      background: none;
+      border: none;
+      color: var(--gold);
+      cursor: pointer;
+      font-size: 0.8rem;
+      line-height: 1;
+      padding: 0;
+    }
+
+    /* Mobile Filter Button */
+    .mobile-filter-btn {
+      display: none;
+      align-items: center;
+      gap: 0.5rem;
+      background: var(--bg-card);
+      border: 1px solid var(--gold-border);
+      border-radius: var(--radius-full);
+      padding: 0.5rem 1rem;
+      color: var(--text-primary);
+      font-size: 0.85rem;
+      font-family: var(--font-ui);
+      cursor: pointer;
+    }
+
+    /* Search bar on catalogue page */
+    .catalogue-search {
+      margin-bottom: 1.5rem;
+      position: relative;
+    }
+
+    .catalogue-search input {
+      width: 100%;
+      height: 50px;
+      background: var(--bg-card);
+      border: 1.5px solid var(--gold-border);
+      border-radius: var(--radius-full);
+      padding: 0 3.5rem 0 1.5rem;
+      color: var(--text-primary);
+      font-family: var(--font-body);
+      font-size: 0.95rem;
+      outline: none;
+      transition: var(--transition);
+    }
+
+    .catalogue-search input:focus {
+      border-color: var(--gold-border-active);
+      box-shadow: 0 0 0 3px var(--gold-glow);
+    }
+
+    .catalogue-search-btn {
+      position: absolute;
+      right: 10px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 36px; height: 36px;
+      background: linear-gradient(135deg, var(--gold), var(--gold-dark));
+      border: none;
+      border-radius: var(--radius-full);
+      color: #07070a;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* No results */
+    .no-results {
+      grid-column: 1/-1;
+      text-align: center;
+      padding: 4rem 2rem;
+      color: var(--text-muted);
+    }
+    .no-results .no-results-icon { font-size: 4rem; margin-bottom: 1rem; }
+
+    @media (max-width: 900px) {
+      .catalogue-layout { grid-template-columns: 1fr; }
+      .sidebar { display: none; position: static; height: auto; max-height: none; }
+      .sidebar.mobile-open { display: block; }
+      .mobile-filter-btn { display: flex; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- TOPBAR -->
+<div class="topbar">
+  <p class="topbar-text">⚡ Livraison GRATUITE à partir de 50 000 FCFA · Paiement sécurisé · Retour 30 jours</p>
+  <button class="topbar-close" aria-label="Fermer">✕</button>
+</div>
+
+<!-- NAVBAR -->
+<header>
+  <nav class="navbar" aria-label="Navigation principale">
+    <div class="container navbar-inner">
+      <a href="index.html" class="nav-logo">
+        <div class="nav-logo-icon" aria-hidden="true">🏺</div>
+        <div class="nav-logo-text">
+          <span class="nav-logo-name">KEMO</span>
+          <span class="nav-logo-sub">Market · Lomé</span>
+        </div>
+      </a>
+
+      <div class="nav-search" role="search">
+        <label for="nav-search-input" class="visually-hidden">Rechercher</label>
+        <input id="nav-search-input" type="search" placeholder="Chercher un produit..." autocomplete="off">
+        <button class="nav-search-btn" aria-label="Rechercher">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+        </button>
+      </div>
+
+      <nav class="nav-actions">
+        <button class="nav-action-btn cart-toggle-btn" aria-label="Panier">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+          <span class="cart-count" aria-live="polite">0</span>
+        </button>
+        <a href="index.html" class="nav-action-btn" aria-label="Retour à l'accueil">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+        </a>
+      </nav>
+    </div>
+  </nav>
+</header>
+
+<!-- CART -->
+<div id="cart-overlay"></div>
+<aside id="cart-drawer" role="dialog" aria-label="Panier" aria-modal="true">
+  <div class="cart-drawer-header">
+    <h2 class="cart-drawer-title">🛒 Mon Panier</h2>
+    <button class="cart-close-btn" id="cart-close-btn" aria-label="Fermer">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg>
+    </button>
+  </div>
+  <div id="cart-empty"><div class="empty-icon">🛒</div><p>Panier vide</p><a href="catalogue.html" class="btn btn-gold btn-sm">Découvrir</a></div>
+  <div id="cart-drawer-items"></div>
+  <div id="cart-footer">
+    <div class="cart-total-row"><span class="cart-total-label">Total</span><span id="cart-total">0 FCFA</span></div>
+    <a href="checkout.html" class="btn btn-gold btn-full" style="margin-bottom:0.5rem">Finaliser →</a>
+    <button onclick="KemoCart.closeCartDrawer()" class="btn btn-ghost btn-full btn-sm">Continuer</button>
+  </div>
+</aside>
+
+<!-- MAIN -->
+<main id="main-content">
+  <div class="container">
+
+    <!-- Breadcrumb + search -->
+    <div class="catalogue-header">
+      <nav class="catalogue-breadcrumb" aria-label="Fil d'Ariane">
+        <a href="index.html">Accueil</a>
+        <span aria-hidden="true">›</span>
+        <span id="breadcrumb-cat">Tous les produits</span>
+      </nav>
+      <div class="catalogue-controls">
+        <button class="mobile-filter-btn" id="mobile-filter-toggle" aria-expanded="false" aria-controls="sidebar">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="4" y1="6" x2="20" y2="6"/><line x1="8" y1="12" x2="16" y2="12"/><line x1="10" y1="18" x2="14" y2="18"/></svg>
+          Filtres
+        </button>
+        <label for="sort-select" class="visually-hidden">Trier par</label>
+        <select class="sort-select" id="sort-select" aria-label="Trier les produits">
+          <option value="default">Pertinence</option>
+          <option value="price-asc">Prix croissant</option>
+          <option value="price-desc">Prix décroissant</option>
+          <option value="rating">Mieux notés</option>
+          <option value="new">Nouveautés</option>
+          <option value="promo">Promotions</option>
+        </select>
+        <div class="view-toggle" role="group" aria-label="Mode d'affichage">
+          <button class="view-btn active" id="view-grid" aria-label="Affichage grille" aria-pressed="true">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+          </button>
+          <button class="view-btn" id="view-list" aria-label="Affichage liste" aria-pressed="false">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="catalogue-layout">
+
+      <!-- SIDEBAR FILTERS -->
+      <aside class="sidebar" id="sidebar" aria-label="Filtres produits">
+
+        <!-- Categories -->
+        <div class="sidebar-section">
+          <h2 class="sidebar-title">Catégories</h2>
+          <fieldset style="border:none;padding:0" aria-label="Filtrer par catégorie">
+            <legend class="visually-hidden">Catégorie</legend>
+            <div class="filter-option">
+              <input type="radio" name="category" id="cat-tous" value="tous" checked>
+              <label for="cat-tous">Tous les produits <span class="filter-count">382</span></label>
+            </div>
+            <div class="filter-option">
+              <input type="radio" name="category" id="cat-mode" value="mode">
+              <label for="cat-mode">👗 Mode & Style <span class="filter-count">47</span></label>
+            </div>
+            <div class="filter-option">
+              <input type="radio" name="category" id="cat-electronique" value="electronique">
+              <label for="cat-electronique">📱 High-Tech <span class="filter-count">83</span></label>
+            </div>
+            <div class="filter-option">
+              <input type="radio" name="category" id="cat-beaute" value="beaute">
+              <label for="cat-beaute">💄 Beauté & Soins <span class="filter-count">124</span></label>
+            </div>
+            <div class="filter-option">
+              <input type="radio" name="category" id="cat-maison" value="maison">
+              <label for="cat-maison">🏠 Maison & Déco <span class="filter-count">61</span></label>
+            </div>
+            <div class="filter-option">
+              <input type="radio" name="category" id="cat-alimentation" value="alimentation">
+              <label for="cat-alimentation">🥗 Alimentation <span class="filter-count">38</span></label>
+            </div>
+            <div class="filter-option">
+              <input type="radio" name="category" id="cat-artisanat" value="artisanat">
+              <label for="cat-artisanat">🪴 Artisanat <span class="filter-count">29</span></label>
+            </div>
+          </fieldset>
+        </div>
+
+        <!-- Prix -->
+        <div class="sidebar-section">
+          <h2 class="sidebar-title">Fourchette de prix</h2>
+          <div class="price-range-inputs">
+            <div>
+              <label for="price-min" style="font-size:0.7rem;color:var(--text-muted)">Min (FCFA)</label>
+              <input type="number" id="price-min" class="price-input" placeholder="0" min="0" aria-label="Prix minimum">
+            </div>
+            <div>
+              <label for="price-max" style="font-size:0.7rem;color:var(--text-muted)">Max (FCFA)</label>
+              <input type="number" id="price-max" class="price-input" placeholder="500 000" min="0" aria-label="Prix maximum">
+            </div>
+          </div>
+          <button class="btn btn-outline btn-full btn-sm" style="margin-top:0.75rem" id="apply-price-filter">Appliquer</button>
+        </div>
+
+        <!-- Note -->
+        <div class="sidebar-section">
+          <h2 class="sidebar-title">Note minimale</h2>
+          <fieldset style="border:none;padding:0" aria-label="Filtrer par note">
+            <legend class="visually-hidden">Note</legend>
+            <div class="filter-option">
+              <input type="radio" name="rating" id="rating-all" value="0" checked>
+              <label for="rating-all">Toutes les notes</label>
+            </div>
+            <div class="filter-option">
+              <input type="radio" name="rating" id="rating-4" value="4">
+              <label for="rating-4">★★★★☆ 4+ étoiles</label>
+            </div>
+            <div class="filter-option">
+              <input type="radio" name="rating" id="rating-45" value="4.5">
+              <label for="rating-45">★★★★★ 4.5+ étoiles</label>
+            </div>
+          </fieldset>
+        </div>
+
+        <!-- Promos -->
+        <div class="sidebar-section">
+          <h2 class="sidebar-title">Offres spéciales</h2>
+          <div class="filter-option">
+            <input type="checkbox" id="filter-promo" value="promo" aria-label="En promotion uniquement">
+            <label for="filter-promo">En promotion uniquement</label>
+          </div>
+          <div class="filter-option">
+            <input type="checkbox" id="filter-flash" value="flash" aria-label="Offres flash uniquement">
+            <label for="filter-flash">Offres flash ⚡</label>
+          </div>
+          <div class="filter-option">
+            <input type="checkbox" id="filter-new" value="new" aria-label="Nouveautés uniquement">
+            <label for="filter-new">Nouveautés 🆕</label>
+          </div>
+        </div>
+
+        <!-- Reset -->
+        <button class="btn btn-ghost btn-full btn-sm" id="reset-filters">Réinitialiser les filtres</button>
+      </aside>
+
+      <!-- PRODUCTS AREA -->
+      <div>
+        <!-- Search bar -->
+        <div class="catalogue-search" role="search">
+          <label for="catalogue-search-input" class="visually-hidden">Rechercher dans le catalogue</label>
+          <input
+            id="catalogue-search-input"
+            type="search"
+            placeholder="Rechercher dans le catalogue..."
+            autocomplete="off"
+          >
+          <button class="catalogue-search-btn" aria-label="Rechercher">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+          </button>
+        </div>
+
+        <!-- Active Filters Display -->
+        <div class="active-filters" id="active-filters" aria-live="polite" aria-label="Filtres actifs"></div>
+
+        <!-- Results Count -->
+        <p style="font-size:0.82rem;color:var(--text-muted);margin-bottom:1rem" aria-live="polite">
+          <span id="results-count">12</span> produits trouvés
+        </p>
+
+        <!-- Products Grid -->
+        <div class="products-grid" id="catalogue-products" aria-label="Liste des produits">
+          <!-- JS populated -->
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+
+<!-- FOOTER minimal -->
+<footer class="footer" style="margin-top:0" role="contentinfo">
+  <div class="container">
+    <div class="footer-bottom">
+      <p class="footer-copy">© 2025 KEMO MARKET · <a href="index.html" style="color:var(--gold)">Accueil</a></p>
+      <div class="footer-payments">
+        <span class="payment-badge">MTN MoMo</span>
+        <span class="payment-badge">Moov Money</span>
+        <span class="payment-badge">Wave</span>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<style>.visually-hidden{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}</style>
+
+<script src="js/products-data.js"></script>
+<script src="js/cart.js"></script>
+<script src="js/main.js"></script>
+<script>
+// ── CATALOGUE LOGIC ─────────────────────────────────────────
+(function() {
+  let currentProducts = [...KEMO_PRODUCTS];
+  let currentFilters = { category: 'tous', minPrice: 0, maxPrice: Infinity, rating: 0, promo: false, flash: false, new: false, query: '' };
+
+  const grid = document.getElementById('catalogue-products');
+  const countEl = document.getElementById('results-count');
+  const sortSelect = document.getElementById('sort-select');
+  const searchInput = document.getElementById('catalogue-search-input');
+  const activeFiltersEl = document.getElementById('active-filters');
+
+  function applyFilters() {
+    let products = [...KEMO_PRODUCTS];
+
+    if (currentFilters.category !== 'tous') products = products.filter(p => p.category === currentFilters.category);
+    if (currentFilters.minPrice > 0) products = products.filter(p => p.price >= currentFilters.minPrice);
+    if (currentFilters.maxPrice < Infinity) products = products.filter(p => p.price <= currentFilters.maxPrice);
+    if (currentFilters.rating > 0) products = products.filter(p => p.rating >= currentFilters.rating);
+    if (currentFilters.promo) products = products.filter(p => p.discount > 0);
+    if (currentFilters.flash) products = products.filter(p => p.flash);
+    if (currentFilters.new) products = products.filter(p => p.new);
+    if (currentFilters.query) products = searchProducts(currentFilters.query).filter(p => currentFilters.category === 'tous' || p.category === currentFilters.category);
+
+    // Sort
+    const sort = sortSelect.value;
+    if (sort === 'price-asc') products.sort((a, b) => a.price - b.price);
+    else if (sort === 'price-desc') products.sort((a, b) => b.price - a.price);
+    else if (sort === 'rating') products.sort((a, b) => b.rating - a.rating);
+    else if (sort === 'promo') products.sort((a, b) => b.discount - a.discount);
+
+    currentProducts = products;
+    render();
+    updateActiveFilters();
+  }
+
+  function render() {
+    countEl.textContent = currentProducts.length;
+
+    if (currentProducts.length === 0) {
+      grid.innerHTML = `
+        <div class="no-results">
+          <div class="no-results-icon">🔍</div>
+          <h3 style="margin-bottom:0.5rem">Aucun produit trouvé</h3>
+          <p>Essayez de modifier vos filtres ou votre recherche</p>
+          <button class="btn btn-gold btn-sm" style="margin-top:1rem" onclick="resetAll()">Voir tous les produits</button>
+        </div>`;
+      return;
+    }
+
+    grid.innerHTML = currentProducts.map(p => renderProductCard(p)).join('');
+  }
+
+  function updateActiveFilters() {
+    const tags = [];
+    if (currentFilters.category !== 'tous') tags.push({ label: KEMO_CATEGORIES.find(c=>c.id===currentFilters.category)?.label || currentFilters.category, key: 'category', reset: 'tous' });
+    if (currentFilters.query) tags.push({ label: `"${currentFilters.query}"`, key: 'query', reset: '' });
+    if (currentFilters.promo) tags.push({ label: 'En promo', key: 'promo', reset: false });
+    if (currentFilters.flash) tags.push({ label: 'Offres flash', key: 'flash', reset: false });
+
+    activeFiltersEl.innerHTML = tags.length ? tags.map(t => `
+      <span class="filter-tag">${t.label}
+        <button class="filter-tag-remove" onclick="removeFilter('${t.key}','${t.reset}')" aria-label="Supprimer le filtre ${t.label}">✕</button>
+      </span>`).join('') : '';
+  }
+
+  window.removeFilter = function(key, reset) {
+    currentFilters[key] = reset === 'false' ? false : reset;
+    // Uncheck the corresponding checkbox/radio
+    const input = document.querySelector(`[name="${key}"][value="${reset}"]`) || document.getElementById(`filter-${key}`);
+    if (input) { if (input.type === 'checkbox') input.checked = false; else input.checked = true; }
+    applyFilters();
+  };
+
+  window.resetAll = function() {
+    currentFilters = { category: 'tous', minPrice: 0, maxPrice: Infinity, rating: 0, promo: false, flash: false, new: false, query: '' };
+    document.querySelectorAll('[name="category"][value="tous"]').forEach(r => r.checked = true);
+    document.querySelectorAll('[name="rating"][value="0"]').forEach(r => r.checked = true);
+    ['filter-promo','filter-flash','filter-new'].forEach(id => { const el = document.getElementById(id); if(el) el.checked = false; });
+    searchInput.value = '';
+    sortSelect.value = 'default';
+    applyFilters();
+  };
+
+  // Event listeners
+  document.querySelectorAll('[name="category"]').forEach(radio => {
+    radio.addEventListener('change', e => {
+      currentFilters.category = e.target.value;
+      document.getElementById('breadcrumb-cat').textContent = KEMO_CATEGORIES.find(c=>c.id===e.target.value)?.label || 'Tous les produits';
+      applyFilters();
+    });
+  });
+
+  document.querySelectorAll('[name="rating"]').forEach(radio => {
+    radio.addEventListener('change', e => { currentFilters.rating = parseFloat(e.target.value); applyFilters(); });
+  });
+
+  document.getElementById('apply-price-filter').addEventListener('click', () => {
+    currentFilters.minPrice = parseInt(document.getElementById('price-min').value) || 0;
+    currentFilters.maxPrice = parseInt(document.getElementById('price-max').value) || Infinity;
+    applyFilters();
+  });
+
+  ['filter-promo','filter-flash','filter-new'].forEach(id => {
+    document.getElementById(id)?.addEventListener('change', e => {
+      currentFilters[id.replace('filter-','')] = e.target.checked;
+      applyFilters();
+    });
+  });
+
+  sortSelect.addEventListener('change', applyFilters);
+
+  searchInput.addEventListener('input', () => {
+    currentFilters.query = searchInput.value.trim();
+    applyFilters();
+  });
+
+  document.getElementById('reset-filters').addEventListener('click', resetAll);
+
+  // Mobile filter toggle
+  document.getElementById('mobile-filter-toggle')?.addEventListener('click', () => {
+    const sidebar = document.getElementById('sidebar');
+    const btn = document.getElementById('mobile-filter-toggle');
+    sidebar.classList.toggle('mobile-open');
+    btn.setAttribute('aria-expanded', sidebar.classList.contains('mobile-open'));
+  });
+
+  // View toggle
+  document.getElementById('view-grid').addEventListener('click', () => {
+    grid.classList.remove('list-view');
+    document.getElementById('view-grid').classList.add('active');
+    document.getElementById('view-list').classList.remove('active');
+  });
+  document.getElementById('view-list').addEventListener('click', () => {
+    grid.classList.add('list-view');
+    document.getElementById('view-list').classList.add('active');
+    document.getElementById('view-grid').classList.remove('active');
+  });
+
+  // URL params
+  const params = new URLSearchParams(window.location.search);
+  if (params.get('cat')) {
+    currentFilters.category = params.get('cat');
+    const radio = document.querySelector(`[name="category"][value="${currentFilters.category}"]`);
+    if (radio) radio.checked = true;
+  }
+  if (params.get('q')) {
+    currentFilters.query = params.get('q');
+    searchInput.value = currentFilters.query;
+  }
+  if (params.get('flash')) { currentFilters.flash = true; document.getElementById('filter-flash').checked = true; }
+  if (params.get('promo')) { currentFilters.promo = true; document.getElementById('filter-promo').checked = true; }
+
+  // Initial render
+  applyFilters();
+})();
+</script>
+</body>
+</html>
