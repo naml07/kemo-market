@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>KEMO MARKET — Achetez &amp; Vendez en Toute Confiance au Togo</title>
+  <meta name="description" content="KEMO MARKET — La marketplace premium du Togo. Mode, High-Tech, Beauté, Maison. Paiement sécurisé, livraison rapide à Lomé et en régions.">
+  <meta name="keywords" content="marketplace togo, acheter en ligne lomé, vente en ligne togo, kemo market, boutique togolaise">
+  <meta property="og:title" content="KEMO MARKET — Marketplace Premium du Togo">
+  <meta property="og:description" content="Achetez et vendez en toute confiance. Argent protégé jusqu'à livraison.">
+  <meta property="og:type" content="website">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="css/style.css">
+  <script type="application/ld+json">
+  {"@context":"https://schema.org","@type":"WebSite","name":"KEMO MARKET","url":"https://kemomarket.tg","description":"Marketplace premium du Togo","potentialAction":{"@type":"SearchAction","target":"https://kemomarket.tg/catalogue.html?q={search_term_string}","query-input":"required name=search_term_string"}}
+  </script>
+</head>
+<body>
+
+<div class="topbar" role="banner" aria-label="Promotion">
+  <p class="topbar-text">⚡ Livraison GRATUITE à partir de 50 000 FCFA · Paiement sécurisé · Retour 30 jours</p>
+  <button class="topbar-close" aria-label="Fermer la bannière">✕</button>
+</div>
+
+<header>
+  <nav class="navbar" aria-label="Navigation principale">
+    <div class="container navbar-inner">
+      <a href="index.html" class="nav-logo" aria-label="KEMO MARKET — Accueil">
+        <div class="nav-logo-icon" aria-hidden="true">🏺</div>
+        <div class="nav-logo-text">
+          <span class="nav-logo-name">KEMO</span>
+          <span class="nav-logo-sub">Market · Lomé</span>
+        </div>
+      </a>
+      <div class="nav-search" role="search">
+        <label for="nav-search-input" class="visually-hidden">Rechercher un produit</label>
+        <input id="nav-search-input" type="search" placeholder="Chercher un produit, une marque..." autocomplete="off" aria-label="Rechercher">
+        <button class="nav-search-btn" aria-label="Lancer la recherche">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+        </button>
+      </div>
+      <nav class="nav-actions" aria-label="Actions utilisateur">
+        <a href="#" class="nav-action-btn" aria-label="Ma liste de favoris">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+        </a>
+        <button class="nav-action-btn cart-toggle-btn" aria-label="Mon panier" aria-haspopup="true">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+          <span class="cart-count" aria-live="polite">0</span>
+        </button>
+        <a href="#" class="nav-action-btn" aria-label="Mon compte">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+        </a>
+        <a href="vendeur.html" class="btn btn-gold btn-sm nav-cta">Vendre</a>
+      </nav>
+    </div>
+  </nav>
+</header>
+
+<div id="cart-overlay" aria-hidden="true"></div>
+<aside id="cart-drawer" role="dialog" aria-label="Votre panier" aria-modal="true">
+  <div class="cart-drawer-header">
+    <h2 class="cart-drawer-title">🛒 Mon Panier</h2>
+    <button class="cart-close-btn" id="cart-close-btn" aria-label="Fermer le panier">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg>
+    </button>
+  </div>
+  <div id="cart-empty" aria-label="Panier vide">
+    <div class="empty-icon" aria-hidden="true">🛒</div>
+    <p>Votre panier est vide</p>
+    <a href="catalogue.html" class="btn btn-gold btn-sm">Découvrir les produits</a>
+  </div>
+  <div id="cart-drawer-items" role="list" aria-label="Articles dans le panier"></div>
+  <div id="cart-footer">
+    <div class="cart-total-row">
+      <span class="cart-total-label">Total estimé</span>
+      <span id="cart-total">0 FCFA</span>
+    </div>
+    <a href="checkout.html" class="btn btn-gold btn-full" style="margin-bottom:0.5rem">Finaliser ma commande →</a>
+    <button onclick="KemoCart.closeCartDrawer()" class="btn btn-ghost btn-full btn-sm">Continuer les achats</button>
+  </div>
+</aside>
+
+<main id="main-content">
+  <section class="hero" aria-label="Accueil KEMO MARKET">
+    <div class="hero-left">
+      <div class="hero-badge animate-on-scroll"><span class="pulse-dot" aria-hidden="true"></span>🇹🇬 Marketplace N°1 au Togo</div>
+      <h1 class="hero-title animate-on-scroll">Achetez.<br><span class="highlight">Vendez.</span><br>En Toute<br>Confiance.</h1>
+      <p class="hero-sub animate-on-scroll">KEMO MARKET protège votre argent jusqu'à la livraison. Des milliers de produits authentiques, livrés partout au Togo. Zéro arnaque. Zéro risque.</p>
+      <div class="hero-ctas animate-on-scroll">
+        <a href="catalogue.html" class="btn btn-gold btn-lg">Découvrir les produits <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
+        <a href="vendeur.html" class="btn btn-outline btn-lg">Devenir vendeur</a>
+      </div>
+      <div class="hero-trust animate-on-scroll">
+        <div class="trust-item"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>Argent protégé</div>
+        <div class="trust-item"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg>Livraison rapide</div>
+        <div class="trust-item"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M1 4v6h6M23 20v-6h-6"/><path d="M20.49 9A9 9 0 0 0 5.64 5.64L1 10m22 4l-4.64 4.36A9 9 0 0 1 3.51 15"/></svg>Retour 30 jours</div>
+        <div class="trust-item"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 13 19.79 19.79 0 0 1 1.61 4.4 2 2 0 0 1 3.6 2.27h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L7.91 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>Support WhatsApp</div>
+      </div>
+    </div>
+    <div class="hero-right" aria-hidden="true">
+      <div class="hero-products-showcase" id="hero-showcase">
+        <a href="catalogue.html" class="hero-product-card featured animate-on-scroll">
+          <div class="hero-product-emoji">🛍️</div>
+          <div><p class="hero-product-name">Chargement...</p><p class="hero-product-price">— FCFA</p></div>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <div class="trust-bar" aria-label="Nos garanties">
+    <div class="container trust-bar-inner">
+      <div class="trust-bar-item"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>Paiement sécurisé</div>
+      <div class="trust-bar-item"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>Argent bloqué jusqu'à livraison</div>
+      <div class="trust-bar-item"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>Livraison rapide à Lomé</div>
+      <div class="trust-bar-item"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M1 4v6h6M23 20v-6h-6"/><path d="M20.49 9A9 9 0 0 0 5.64 5.64L1 10m22 4l-4.64 4.36A9 9 0 0 1 3.51 15"/></svg>Retour gratuit 30 jours</div>
+      <div class="trust-bar-item"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 13 19.79 19.79 0 0 1 1.61 4.4 2 2 0 0 1 3.6 2.27h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L7.91 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>Support 7j/7 sur WhatsApp</div>
+    </div>
+  </div>
+
+  <section class="categories-section" aria-labelledby="categories-title">
+    <div class="container">
+      <div class="section-header">
+        <div><p class="section-eyebrow">Explorer</p><h2 class="section-title" id="categories-title">Toutes les catégories</h2></div>
+        <a href="catalogue.html" class="btn btn-outline btn-sm">Voir tout</a>
+      </div>
+      <div class="categories-grid">
+        <button class="category-card animate-on-scroll" data-category="mode" aria-label="Mode &amp; Style"><span class="category-icon" aria-hidden="true">👗</span><p class="category-name">Mode &amp; Style</p><p class="category-count">47 produits</p></button>
+        <button class="category-card animate-on-scroll" data-category="electronique" aria-label="High-Tech"><span class="category-icon" aria-hidden="true">📱</span><p class="category-name">High-Tech</p><p class="category-count">83 produits</p></button>
+        <button class="category-card animate-on-scroll" data-category="beaute" aria-label="Beauté"><span class="category-icon" aria-hidden="true">💄</span><p class="category-name">Beauté &amp; Soins</p><p class="category-count">124 produits</p></button>
+        <button class="category-card animate-on-scroll" data-category="maison" aria-label="Maison"><span class="category-icon" aria-hidden="true">🏠</span><p class="category-name">Maison &amp; Déco</p><p class="category-count">61 produits</p></button>
+        <button class="category-card animate-on-scroll" data-category="alimentation" aria-label="Alimentation"><span class="category-icon" aria-hidden="true">🥗</span><p class="category-name">Alimentation</p><p class="category-count">38 produits</p></button>
+        <button class="category-card animate-on-scroll" data-category="artisanat" aria-label="Artisanat"><span class="category-icon" aria-hidden="true">🪴</span><p class="category-name">Artisanat Local</p><p class="category-count">29 produits</p></button>
+      </div>
+    </div>
+  </section>
+
+  <section class="flash-section" aria-labelledby="flash-title">
+    <div class="container">
+      <div class="section-header">
+        <div><p class="section-eyebrow">⚡ Durée limitée</p><h2 class="section-title" id="flash-title">Offres Flash du Jour</h2></div>
+        <div class="flash-timer" aria-label="Temps restant">
+          <span class="flash-timer-label">Fin dans</span>
+          <div class="timer-block"><span class="timer-number" id="timer-h">05</span><span class="timer-label">h</span></div>
+          <span class="timer-sep" aria-hidden="true">:</span>
+          <div class="timer-block"><span class="timer-number" id="timer-m">47</span><span class="timer-label">min</span></div>
+          <span class="timer-sep" aria-hidden="true">:</span>
+          <div class="timer-block"><span class="timer-number" id="timer-s">23</span><span class="timer-label">sec</span></div>
+        </div>
+      </div>
+      <div class="products-grid" id="flash-products"></div>
+    </div>
+  </section>
+
+  <section class="section" aria-labelledby="featured-title">
+    <div class="container">
+      <div class="section-header">
+        <div><p class="section-eyebrow">Sélection</p><h2 class="section-title" id="featured-title">Produits Vedettes</h2></div>
+        <a href="catalogue.html" class="btn btn-outline btn-sm">Voir tout le catalogue</a>
+      </div>
+      <div class="products-grid" id="featured-products"></div>
+    </div>
+  </section>
+
+  <section class="seller-teaser" aria-labelledby="seller-title">
+    <div class="container">
+      <div class="seller-teaser-inner">
+        <div>
+          <p class="section-eyebrow animate-on-scroll">🏪 Pour les entrepreneurs</p>
+          <h2 class="seller-teaser-title animate-on-scroll" id="seller-title">Vends sur<br><span style="color:var(--gold)">KEMO MARKET</span><br>Sans Risque d'Impayés</h2>
+          <p class="seller-teaser-text animate-on-scroll">Rejoins des centaines de vendeurs qui font confiance à KEMO MARKET. On sécurise tes paiements, tu gères tes prix. Inscription gratuite · 5 premières commandes offertes.</p>
+          <div class="hero-ctas animate-on-scroll">
+            <a href="vendeur.html" class="btn btn-gold btn-lg">Créer mon compte vendeur</a>
+            <a href="vendeur.html#how-it-works" class="btn btn-outline">Comment ça marche ?</a>
+          </div>
+        </div>
+        <div class="seller-stats animate-on-scroll">
+          <div class="seller-stat"><p class="seller-stat-number">2.4K+</p><p class="seller-stat-label">Vendeurs actifs</p></div>
+          <div class="seller-stat"><p class="seller-stat-number">18K+</p><p class="seller-stat-label">Commandes livrées</p></div>
+          <div class="seller-stat"><p class="seller-stat-number">98%</p><p class="seller-stat-label">Satisfaction clients</p></div>
+          <div class="seller-stat"><p class="seller-stat-number">0 FCFA</p><p class="seller-stat-label">Inscription gratuite</p></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="testimonials-section section-alt" aria-labelledby="testimonials-title">
+    <div class="container">
+      <div class="section-header"><div><p class="section-eyebrow">Avis clients</p><h2 class="section-title" id="testimonials-title">Ce qu'ils disent de KEMO</h2></div></div>
+      <div class="testimonials-grid">
+        <article class="testimonial-card animate-on-scroll"><div class="testimonial-stars">★★★★★</div><blockquote class="testimonial-text">"J'avais peur d'acheter en ligne à cause des arnaques, mais KEMO MARKET m'a rassuré. J'ai reçu ma commande en 24h !"</blockquote><div class="testimonial-author"><div class="testimonial-avatar" aria-hidden="true">👩🏾</div><div><p class="testimonial-name">Adjoa K.</p><p class="testimonial-location">📍 Lomé, Tokoin</p></div></div></article>
+        <article class="testimonial-card animate-on-scroll"><div class="testimonial-stars">★★★★★</div><blockquote class="testimonial-text">"En tant que vendeur, je ne me stresse plus pour les impayés. KEMO sécurise mes paiements. Excellent !"</blockquote><div class="testimonial-author"><div class="testimonial-avatar" aria-hidden="true">👨🏿</div><div><p class="testimonial-name">Kwame A.</p><p class="testimonial-location">📍 Lomé, Adidogomé</p></div></div></article>
+        <article class="testimonial-card animate-on-scroll"><div class="testimonial-stars">★★★★☆</div><blockquote class="testimonial-text">"Le site est beau, facile à utiliser. La livraison était rapide et l'emballage soigné."</blockquote><div class="testimonial-author"><div class="testimonial-avatar" aria-hidden="true">👩🏿</div><div><p class="testimonial-name">Afi M.</p><p class="testimonial-location">📍 Lomé, Agoè</p></div></div></article>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="footer" role="contentinfo">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <a href="index.html" class="footer-logo"><div class="nav-logo-icon" aria-hidden="true">🏺</div><div class="nav-logo-text"><span class="nav-logo-name">KEMO MARKET</span><span class="nav-logo-sub">Lomé · Togo</span></div></a>
+        <p class="footer-desc">La marketplace premium du Togo. Achetez et vendez en toute confiance.</p>
+        <nav class="footer-socials" aria-label="Réseaux sociaux">
+          <a href="#" class="footer-social" aria-label="Facebook">f</a>
+          <a href="#" class="footer-social" aria-label="Instagram">📷</a>
+          <a href="#" class="footer-social" aria-label="TikTok">🎵</a>
+          <a href="#" class="footer-social" aria-label="WhatsApp">💬</a>
+        </nav>
+      </div>
+      <nav aria-label="Boutique"><h3 class="footer-col-title">Boutique</h3><ul class="footer-links"><li><a href="catalogue.html">Tous les produits</a></li><li><a href="catalogue.html?promo=true">Promotions</a></li><li><a href="catalogue.html?new=true">Nouveautés</a></li><li><a href="catalogue.html?flash=true">Offres Flash</a></li><li><a href="vendeur.html">Devenir vendeur</a></li></ul></nav>
+      <nav aria-label="Aide"><h3 class="footer-col-title">Aide</h3><ul class="footer-links"><li><a href="#">Comment ça marche</a></li><li><a href="#">Suivi de commande</a></li><li><a href="#">Politique de retour</a></li><li><a href="#">Paiements sécurisés</a></li><li><a href="#">FAQ</a></li></ul></nav>
+      <address><h3 class="footer-col-title">Contact</h3><ul class="footer-links" style="font-style:normal"><li><a href="https://wa.me/22890000000">💬 WhatsApp Business</a></li><li><a href="mailto:contact@kemomarket.tg">📧 contact@kemomarket.tg</a></li><li><a href="tel:+22890000000">📞 +228 90 00 00 00</a></li><li style="color:var(--text-muted);font-size:0.82rem">📍 Lomé, Togo</li></ul></address>
+    </div>
+    <div class="footer-bottom">
+      <p class="footer-copy">© 2025 KEMO MARKET. Tous droits réservés.</p>
+      <div class="footer-payments" aria-label="Moyens de paiement">
+        <span class="payment-badge">MTN MoMo</span><span class="payment-badge">Moov Money</span><span class="payment-badge">Wave</span><span class="payment-badge">Flooz</span><span class="payment-badge">Espèces à la livraison</span>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<button id="back-to-top" aria-label="Retour en haut" style="position:fixed;bottom:2rem;right:2rem;width:48px;height:48px;background:linear-gradient(135deg,var(--gold),var(--gold-dark));border:none;border-radius:50%;color:#07070a;font-size:1.2rem;cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 20px rgba(212,168,83,0.4);opacity:0;pointer-events:none;transition:all 0.3s ease;z-index:500">↑</button>
+
+<style>.visually-hidden{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}#back-to-top.visible{opacity:1;pointer-events:all}</style>
+<script src="js/products-data.js"></script>
+<script src="js/cart.js"></script>
+<script src="js/main.js"></script>
+<script>
+function handleNewsletter(e){e.preventDefault();const btn=e.target.querySelector('button[type="submit"]');btn.textContent='✓ Inscrit !';btn.style.background='var(--success)';setTimeout(()=>{btn.textContent="S'inscrire gratuitement";btn.style.background='';e.target.reset();},3000);}
+</script>
+</body>
+</html>
